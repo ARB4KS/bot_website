@@ -6,6 +6,9 @@ from django.contrib.auth.decorators import login_required
 import requests
 from django.contrib.auth.decorators import  login_required
 
+
+
+
 API_ENDPOINT = 'https://discord.com/api/v10'
 CLIENT_ID = '1033667474241093693'
 CLIENT_SECRET = 'TybyeWQwm59sImj8ZhKhtQKvg6mz4e5p'
@@ -67,5 +70,24 @@ def exchange_code(code: str):
     else:
         return "Not logged, you have to join the server"
 
+
+def view_that_asks_for_money(request):
+
+    # What you want the button to do.
+    paypal_dict = {
+        "business": "receiver_email@example.com",
+        "amount": "10000000.00",
+        "item_name": "name of the item",
+        "invoice": "unique-invoice-id",
+        "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+        "return": request.build_absolute_uri(reverse('your-return-view')),
+        "cancel_return": request.build_absolute_uri(reverse('your-cancel-view')),
+        "custom": "premium_plan",  # Custom command to correlate to some function later (optional)
+    }
+
+    # Create the instance.
+    form = PayPalPaymentsForm(initial=paypal_dict)
+    context = {"form": form}
+    return render(request, "payment.html", context)
 
 
