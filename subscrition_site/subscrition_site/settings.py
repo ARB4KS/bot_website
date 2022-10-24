@@ -100,8 +100,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTHENTIFICATION_BACKENDS = [
-
+AUTHENTICATION_BACKENDS = [
+    "oauth2discord.auth.DiscordAuthenticationBackend"
 ]
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/

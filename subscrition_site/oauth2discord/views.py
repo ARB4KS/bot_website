@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 import requests
 
+
 API_ENDPOINT = 'https://discord.com/api/v10'
 CLIENT_ID = '1033667474241093693'
 CLIENT_SECRET = 'TybyeWQwm59sImj8ZhKhtQKvg6mz4e5p'
@@ -38,7 +39,7 @@ def discord_login_redirect(request: HttpRequest):
   code = request.GET.get('code')
   print("code=",code)
   user = exchange_code(code)
-  #discord_user = authenticate(request, user=user)
+  discord_user = authenticate(request, user=user)
   #discord_user = list(discord_user).pop()
   #print(discord_user)
   #login(request, discord_user)
@@ -70,7 +71,7 @@ def exchange_code(code: str):
     for serveur in guilds:
         serveur_id.append(serveur["id"])
     if SERVER_ID in serveur_id:
-        return user["username"]
+        return user
     else:
         return "Not logged, you have to join the server"
 
