@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 import requests
 from django.contrib.auth.decorators import  login_required
-
+#from .standarts.form import PayPalPayementForm
 
 
 
