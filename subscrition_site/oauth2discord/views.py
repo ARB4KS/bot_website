@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 import requests
-
+from django.contrib.auth.decorators import  login_required
 
 API_ENDPOINT = 'https://discord.com/api/v10'
 CLIENT_ID = '1033667474241093693'
@@ -19,18 +19,10 @@ auth_url_discord = "https://discord.com/api/oauth2/authorize?client_id=103366747
 def home(request: HttpRequest) -> JsonResponse:
   return JsonResponse({ "msg": "Hello World" })
 
-def get_authenticated_user(request: HttpRequest):
-  print(request.user)
-  user = request.user
-  return JsonResponse({
-    "id": user.id,
-    "discord_tag": user.discord_tag,
-    "avatar": user.avatar,
-    "public_flags": user.public_flags,
-    "flags": user.flags,
-    "locale": user.locale,
-    "mfa_enabled": user.mfa_enabled
-  })
+
+@login_required(login_url="/oauth2/login/")
+def get_authenticated_user(request:HttpRequest):
+    return JsonResponse({"msg":"Authenticated"})
 
 def discord_login(request: HttpRequest):
   return redirect(auth_url_discord)
@@ -40,9 +32,9 @@ def discord_login_redirect(request: HttpRequest):
   print("code=",code)
   user = exchange_code(code)
   discord_user = authenticate(request, user=user)
-  #discord_user = list(discord_user).pop()
-  #print(discord_user)
-  #login(request, discord_user)
+  user_pop = list(discord_user).pop()
+  print(user_pop)
+  login(request,user_pop)
   #return redirect("/auth/user")
   return HttpResponse(f"<h1>Logged as {user}<h1>")
 
