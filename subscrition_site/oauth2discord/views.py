@@ -5,7 +5,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 import requests
 from django.contrib.auth.decorators import  login_required
-#from .standarts.form import PayPalPayementForm
+from paypal.standard.forms import PayPalPaymentsForm
+from django.urls import reverse
 
 
 
@@ -71,23 +72,35 @@ def exchange_code(code: str):
         return "Not logged, you have to join the server"
 
 
-def view_that_asks_for_money(request):
 
+@login_required(login_url="/oauth2/login/")
+def view_that_asks_for_money(request):
+    host = request.get_host()
     # What you want the button to do.
     paypal_dict = {
         "business": "receiver_email@example.com",
         "amount": "10000000.00",
         "item_name": "name of the item",
         "invoice": "unique-invoice-id",
-        "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
-        "return": request.build_absolute_uri(reverse('your-return-view')),
-        "cancel_return": request.build_absolute_uri(reverse('your-cancel-view')),
+        "notify_url": request.build_absolute_uri(reverse('success_view')),
+        "return": request.build_absolute_uri(reverse('success_view')),
+        "cancel_return": request.build_absolute_uri(reverse('home-view')),
         "custom": "premium_plan",  # Custom command to correlate to some function later (optional)
     }
 
     # Create the instance.
     form = PayPalPaymentsForm(initial=paypal_dict)
     context = {"form": form}
-    return render(request, "payment.html", context)
+    return render(request, "payements.html", context)
+
+def home_view(request):
+    return HttpResponse("<h1>Cool</h1>")
+
+def success_view(request):
+    username = request.user.discord_tag
+    print(username)
+    return HttpResponse(f"{username} a payé. GG à lui")
+
+
 
 
