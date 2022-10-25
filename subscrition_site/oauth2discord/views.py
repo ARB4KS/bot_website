@@ -7,7 +7,7 @@ import requests
 from django.contrib.auth.decorators import  login_required
 from paypal.standard.forms import PayPalPaymentsForm
 from django.urls import reverse
-
+import json
 
 
 API_ENDPOINT = 'https://discord.com/api/v10'
@@ -35,12 +35,14 @@ def discord_login_redirect(request: HttpRequest):
   code = request.GET.get('code')
   print("code=",code)
   user = exchange_code(code)
+  user_json = json.dumps(user)
   discord_user = authenticate(request, user=user)
   user_pop = list(discord_user).pop()
-  print(user_pop)
   login(request,user_pop)
-  #return redirect("/auth/user")
-  return HttpResponse(f"<h1>Logged as {user}<h1>")
+  image = "https://cdn.discordapp.com/avatars/"+user["id"]+"/"+user["avatar"]+".jpg"
+  print(image)
+  context = {"image":image,"user":request.user,"is_logged": request.user.is_authenticated(request)}
+  return render(request,"home.html",context)
 
 
 def exchange_code(code: str):
@@ -67,9 +69,40 @@ def exchange_code(code: str):
     for serveur in guilds:
         serveur_id.append(serveur["id"])
     if SERVER_ID in serveur_id:
+
         return user
     else:
         return "Not logged, you have to join the server"
+def get_image(code :str):
+    data = {
+        'client_id': CLIENT_ID,
+        'client_secret': CLIENT_SECRET,
+        'grant_type': 'authorization_code',
+        'code': code,
+        'redirect_uri': REDIRECT_URI,
+    }
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    r = requests.post('%s/oauth2/token' % API_ENDPOINT, data=data, headers=headers)
+    json = r.json()
+    print(json)
+    access_token = json["access_token"]
+    response = requests.get("https://discord.com/api/v6/users/@me",
+                            headers={'Authorization': 'Bearer %s' % access_token})
+    response_guild = requests.get("https://discord.com/api/v6/users/@me/guilds",
+                                  headers={'Authorization': 'Bearer %s' % access_token})
+    guilds = response_guild.json()
+    user = response.json()
+    serveur_id = []
+    for serveur in guilds:
+        serveur_id.append(serveur["id"])
+    if SERVER_ID in serveur_id:
+        image = "https://cdn.discordapp.com/" + user["avatar"]
+        return image
+    else:
+        return "Not logged, you have to join the server"
+
 
 
 
@@ -94,7 +127,16 @@ def view_that_asks_for_money(request):
     return render(request, "payements.html", context)
 
 def home_view(request):
-    return HttpResponse("<h1>Cool</h1>")
+    is_logged =request.user.is_authenticated
+    print(is_logged)
+    if is_logged != False:
+        image = "https://cdn.discordapp.com/avatars/" + str(request.user.id) + "/" + request.user.avatar + ".jpg"
+        is_logged = True
+    else:
+        image ="https://seeklogo.com/images/D/discord-icon-new-2021-logo-09772BF096-seeklogo.com.png"
+    context = {"image":image,"user":request.user,"is_logged": is_logged}
+
+    return render(request,"home.html",context)
 
 def success_view(request):
     username = request.user.discord_tag
