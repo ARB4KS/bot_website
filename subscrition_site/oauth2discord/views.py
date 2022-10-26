@@ -10,6 +10,9 @@ from django.urls import reverse
 import json
 
 
+
+
+
 API_ENDPOINT = 'https://discord.com/api/v10'
 CLIENT_ID = '1033667474241093693'
 CLIENT_SECRET = 'TybyeWQwm59sImj8ZhKhtQKvg6mz4e5p'
@@ -144,5 +147,6 @@ def success_view(request):
     return HttpResponse(f"{username} a payé. GG à lui")
 
 
-
+def paypal_test(request):
+    return render(request,"paypal_test.html")
 

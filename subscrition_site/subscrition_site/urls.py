@@ -23,6 +23,7 @@ urlpatterns = [
     path('auth/user/', views.get_authenticated_user, name='get_authenticated_user'),
     path('oauth2/', include("oauth2discord.urls")),
     path("paypal/",views.view_that_asks_for_money,name="paypal_view"),
-    path("",views.home_view,name="home-view")
+    path("",views.home_view,name="home-view"),
+    path("paypal-test/",views.paypal_test,name="paypal_test")
 ]
 
