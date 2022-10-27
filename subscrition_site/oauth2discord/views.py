@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import  login_required
 from paypal.standard.forms import PayPalPaymentsForm
 from django.urls import reverse
 import json
+from collections.abc import Iterable
+
 
 
 
@@ -39,9 +41,10 @@ def discord_login_redirect(request: HttpRequest):
   print("code=",code)
   user = exchange_code(code)
   user_json = json.dumps(user)
-  discord_user = authenticate(request, user=user)
-  user_pop = list(discord_user).pop()
-  login(request,user_pop)
+  discord_user_auth = authenticate(request, user=user)
+  if isinstance(discord_user_auth, Iterable):
+      discord_user_auth = list(discord_user_auth).pop()
+  login(request,discord_user_auth)
   image = "https://cdn.discordapp.com/avatars/"+user["id"]+"/"+user["avatar"]+".jpg"
   print(image)
   context = {"image":image,"user":request.user,"is_logged": request.user.is_authenticated(request)}
@@ -141,12 +144,16 @@ def home_view(request):
 
     return render(request,"home.html",context)
 
-def success_view(request):
+def success_view(request,secret_key):
     username = request.user.discord_tag
+    if secret_key != request.user.secret_key:
+        return HttpResponse(f"404 erreur")
     print(username)
     return HttpResponse(f"{username} a payé. GG à lui")
 
 
 def paypal_test(request):
-    return render(request,"paypal_test.html")
+    print(request.user.secret_key)
+    context ={"user":request.user}
+    return render(request,"paypal_test.html",context=context)
 
