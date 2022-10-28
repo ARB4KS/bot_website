@@ -1,0 +1,19 @@
+li {
+  display: inline;
+}
+ul {
+  background-color:#FFFDD0;
+  list-style-type: none;
+  margin-left:0;
+  width:100%;
+  margin-top:0;
+  padding: 20px;
+
+}
+.user_avatar{
+border-radius:5rem;
+max-width:10%;}
+.user_tag{
+margin-left:50%;}
+ul img{
+padding:0;}

@@ -1,5 +1,7 @@
 from django.contrib.auth.backends import BaseBackend
 from .models import DiscordUser
+import random
+
 
 class DiscordAuthenticationBackend(BaseBackend):
     def authenticate(self,request,user)-> DiscordUser:
@@ -8,7 +10,6 @@ class DiscordAuthenticationBackend(BaseBackend):
         print(find_user)
         if len(find_user)==0:
             new_user = DiscordUser.objects.create_new_discord_user(user)
-            print(new_user)
             return new_user
         return find_user
     def get_user(self, user_id):

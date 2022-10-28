@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel= "stylesheet" href="{% static 'css/base.css' %}">
+    <meta charset="UTF-8">
+    <title>Fast Cop</title>
+</head>
+<body>
+<ul>
+  <li><a href="">Nos offres</a></li>
+  <li><a href="news.asp">A Contact</a></li>
+  <li><a href="contact.asp">A propos</a></li>
+    <li class="user_tag">{% if is_logged %}
+    <img class="user_avatar" src="{{ image }}">
+{{ user.discord_tag }}
+{% else %}
+<a href="{% url 'oauth_login' %}">Se connecter avec discord</a>
+<img class ="user_avatar" src="{{ image }}">
+{% endif %}</li>
+</ul>
+<h1>- de temps, + de revenu</h1>
+<p> Découvrez notre bot super </p>
+
+
+</body>
+</html>

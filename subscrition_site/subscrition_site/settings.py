@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'oauth2discord',
+    'paypal.standard.ipn',
 ]
 
 MIDDLEWARE = [
@@ -76,8 +77,11 @@ WSGI_APPLICATION = 'subscrition_site.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'users',
+        'USER': 'admin',
+        'PASSWORD': '}}NAMI}}667',
+        'HOST':'localhost',
     }
 }
 
@@ -124,3 +128,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+#Paypal settings
+PAYPAL_TEST = True
+PAYPAL_RECEIVER_EMAIL = "sb-58eny21981132@business.example.com"
