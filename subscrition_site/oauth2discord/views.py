@@ -9,6 +9,7 @@ from paypal.standard.forms import PayPalPaymentsForm
 from django.urls import reverse
 import json
 from collections.abc import Iterable
+import random
 
 
 
@@ -146,9 +147,12 @@ def home_view(request):
 
 def success_view(request,secret_key):
     username = request.user.discord_tag
-    if secret_key != request.user.secret_key:
+    if int(secret_key) != int(request.user.secret_key):
         return HttpResponse(f"404 erreur")
     print(username)
+    request.user.secret_key = random.getrandbits(128)
+    print(request.user.secret_key)
+    request.user.save()
     return HttpResponse(f"{username} a payé. GG à lui")
 
 

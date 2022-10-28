@@ -25,6 +25,6 @@ urlpatterns = [
     path("paypal/",views.view_that_asks_for_money,name="paypal_view"),
     path("",views.home_view,name="home-view"),
     path("paypal-test/",views.paypal_test,name="paypal_test"),
-    path("paypal_sucess/<int:secret_key>",views.success_view,name="paypal_sucess")
+    path("paypal_success/<int:secret_key>",views.success_view,name="paypal_sucess")
 ]
 
