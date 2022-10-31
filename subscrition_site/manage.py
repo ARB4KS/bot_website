@@ -21,12 +21,12 @@ def main():
 
 
 if __name__ == '__main__':
-    from bot.discordBot import RunBot
+    from bot.discordBot import run
     import bot.discordBot
-    t1=Thread(target=main())
+    #t1=Thread(target=main())
 
     t2=Thread(target=bot.discordBot.run())
-    t1.start()
+    #t1.start()
     t2.start()
 
     main()
