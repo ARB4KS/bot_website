@@ -82,6 +82,7 @@ DATABASES = {
         'USER': 'admin',
         'PASSWORD': '}}NAMI}}667',
         'HOST':'localhost',
+        'PORT':'5433',
     }
 }
 
