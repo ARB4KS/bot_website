@@ -2,7 +2,9 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-
+import discord
+import asyncio
+from threading import Thread
 
 def main():
     """Run administrative tasks."""
@@ -19,4 +21,14 @@ def main():
 
 
 if __name__ == '__main__':
+    from bot.discordBot import RunBot
+    import bot.discordBot
+    t1=Thread(target=main())
+
+    t2=Thread(target=bot.discordBot.run())
+    t1.start()
+    t2.start()
+
     main()
+
+
